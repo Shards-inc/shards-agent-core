@@ -1,5 +1,7 @@
 from typing import List, Dict, Any
 from core.agent import BaseAgent, AgentResult, AgentAction
+from agents.data_analysis_agent import DataAnalysisAgent
+from agents.security_agent import SecurityAgent
 
 class KernelAgent(BaseAgent):
     def __init__(self):
@@ -62,6 +64,8 @@ class OrchestratorAgent(BaseAgent):
             goal="Coordinate specialized Shards agents to complete complex multi-step tasks."
         )
         self.sub_agents = {agent.name: agent for agent in agents}
+        self.sub_agents["DataAnalysisAgent"] = DataAnalysisAgent()
+        self.sub_agents["SecurityAgent"] = SecurityAgent()
 
     async def run(self, task: str) -> AgentResult:
         self.log_thought(f"Orchestrating task: {task}")
@@ -70,5 +74,5 @@ class OrchestratorAgent(BaseAgent):
         results = []
         for agent_name, agent in self.sub_agents.items():
             sub_task_result = await agent.run(f"Part of orchestrated task: {task}")
-            results.append(f"{{agent_name}} result: {{sub_task_result.output}}")
-        return AgentResult(output=f"OrchestratorAgent completed: {task}. Sub-agent results: {{'; '.join(results)}}", status="success")
+            results.append(f"{agent_name} result: {sub_task_result.output}")
+        return AgentResult(output=f"OrchestratorAgent completed: {task}. Sub-agent results: {'; '.join(results)}", status="success")
