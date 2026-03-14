@@ -1,0 +1,9 @@
+pydantic>=2.0.0
+asyncio
+pytest
+pytest-asyncio
+flake8
+black
+mypy
+requests
+aiohttp
