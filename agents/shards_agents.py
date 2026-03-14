@@ -28,6 +28,32 @@ class RevenueAgent(BaseAgent):
         # Implementation for revenue-engine automation
         return AgentResult(output=f"RevenueAgent processed: {task}", status="success")
 
+class NemotronAgent(BaseAgent):
+    def __init__(self):
+        super().__init__(
+            name="NemotronAgent",
+            role="Nemotron-powered Reasoning Specialist",
+            goal="Provide advanced reasoning, coding, and multi-step problem-solving using Nemotron models."
+        )
+
+    async def run(self, task: str) -> AgentResult:
+        self.log_thought(f"Applying Nemotron reasoning to task: {task}")
+        # Simulate Nemotron model interaction
+        return AgentResult(output=f"NemotronAgent reasoned: {task}", status="success")
+
+class NemoClawAgent(BaseAgent):
+    def __init__(self):
+        super().__init__(
+            name="NemoClawAgent",
+            role="Enterprise AI Agent Platform Integrator",
+            goal="Orchestrate and manage agents within the NVIDIA NemoClaw ecosystem for enterprise tasks."
+        )
+
+    async def run(self, task: str) -> AgentResult:
+        self.log_thought(f"Integrating with NemoClaw for task: {task}")
+        # Simulate NemoClaw platform interaction
+        return AgentResult(output=f"NemoClawAgent managed: {task}", status="success")
+
 class OrchestratorAgent(BaseAgent):
     def __init__(self, agents: List[BaseAgent]):
         super().__init__(
@@ -39,5 +65,10 @@ class OrchestratorAgent(BaseAgent):
 
     async def run(self, task: str) -> AgentResult:
         self.log_thought(f"Orchestrating task: {task}")
-        # Logic to delegate sub-tasks to KernelAgent, RevenueAgent, etc.
-        return AgentResult(output=f"OrchestratorAgent completed: {task}", status="success")
+        # Logic to delegate sub-tasks to KernelAgent, RevenueAgent, NemotronAgent, NemoClawAgent etc.
+        # For demo purposes, we'll just acknowledge the task.
+        results = []
+        for agent_name, agent in self.sub_agents.items():
+            sub_task_result = await agent.run(f"Part of orchestrated task: {task}")
+            results.append(f"{{agent_name}} result: {{sub_task_result.output}}")
+        return AgentResult(output=f"OrchestratorAgent completed: {task}. Sub-agent results: {{'; '.join(results)}}", status="success")
