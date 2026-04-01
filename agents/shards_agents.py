@@ -66,9 +66,10 @@ class OrchestratorAgent(BaseAgent):
     async def run(self, task: str) -> AgentResult:
         self.log_thought(f"Orchestrating task: {task}")
         # Logic to delegate sub-tasks to KernelAgent, RevenueAgent, NemotronAgent, NemoClawAgent etc.
-        # For demo purposes, we'll just acknowledge the task.
         results = []
         for agent_name, agent in self.sub_agents.items():
             sub_task_result = await agent.run(f"Part of orchestrated task: {task}")
-            results.append(f"{{agent_name}} result: {{sub_task_result.output}}")
-        return AgentResult(output=f"OrchestratorAgent completed: {task}. Sub-agent results: {{\'; \'.join(results)}}", status="success")
+            results.append(f"{agent_name} result: {sub_task_result.output}")
+        
+        results_str = "; ".join(results)
+        return AgentResult(output=f"OrchestratorAgent completed: {task}. Sub-agent results: {results_str}", status="success")
